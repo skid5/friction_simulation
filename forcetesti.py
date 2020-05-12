@@ -9,11 +9,11 @@ simu.create_slab(element='Ag',xy_cells=3,z_cells=2,top_z=3.38)
 
 simu.create_interaction(['Au','Au'], strength=1.0, equilibrium_distance=2.375)
 simu.create_interaction(['Ag','Ag'], strength=1.0, equilibrium_distance=1.781)
-simu.create_interaction(['Au','Ag'], strength=0.1, equilibrium_distance=2.0)
+#simu.create_interaction(['Au','Ag'], strength=0.1, equilibrium_distance=2.0)
 
 au_indices = simu.get_indices_by_element('Au')
 ag_indices = simu.get_indices_by_element('Ag')
-simu.add_constant_force(au_indices, [0,0,10])
+#simu.add_constant_force(au_indices, [0,0,10])
 
 simu.create_dynamics(dt=1.0, temperature=300)
 
