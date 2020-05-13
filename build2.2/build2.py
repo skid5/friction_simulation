@@ -22,7 +22,7 @@ simu.create_dynamics(dt=1.0, temperature=500, coupled_indices=bottom_indices)
 simu.print_stats_during_simulation(interval=50.0)
 simu.save_trajectory_during_simulation(interval=50.0)
 
-simu.gather_average_force_during_simulation()
+simu.gather_average_force_during_simulation(indices=ag_indices)
 
 #happenings
 simu.fix_positions(bottom_indices, [True,True,True])
