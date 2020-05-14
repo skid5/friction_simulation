@@ -4,9 +4,10 @@ import  friction_tools as ft
 
 simu = ft.FrictionSimulation()
 force_list = [-0.5, -0.1, -0.05, -0.01]
-for i in range(len(force_list)-1):
+for i in range(len(force_list)):
     simu.continue_from_trajectory(filename="beginning.traj")
 
+    simu.remove_constraints()
 
     #interactions
     simu.create_interaction(['Au','Au'], strength=1.0, equilibrium_distance=2.375)
