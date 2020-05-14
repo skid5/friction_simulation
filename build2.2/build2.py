@@ -26,10 +26,10 @@ simu.gather_average_force_during_simulation(indices=ag_indices)
 
 #happenings
 simu.fix_positions(bottom_indices, [True,True,True])
-simu.add_constant_force(ag_indices, [0, 0, -0.02])
-simu.run_simulation(time=1000.0)
+simu.add_constant_force(ag_indices, [0, 0, -0.1])
+simu.run_simulation(time=2000.0)
 
 simu.fix_velocities(ag_indices, [0.005, 0, 0], [True,False,False])
-simu.run_simulation(time=2000.0)
+simu.run_simulation(time=5000.0)
 
 ft.trajectory_to_xyz()
