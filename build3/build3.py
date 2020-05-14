@@ -21,9 +21,8 @@ for i in range(len(force_list)-1):
 
 
     #stats and dynamics
-    if i == 0:
-        simu.create_dynamics(dt=1.0, temperature=300, coupled_indices=bottom_indices)
-        simu.print_stats_during_simulation(interval=50.0)
+    simu.create_dynamics(dt=1.0, temperature=300, coupled_indices=bottom_indices)
+    simu.print_stats_during_simulation(interval=50.0)
 
     simu.save_trajectory_during_simulation(interval=50.0, filename="simulation"+str(i) + ".traj")
 
