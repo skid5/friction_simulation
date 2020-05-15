@@ -37,6 +37,8 @@ for i in range(len(force_list)):
     simu.fix_velocities(ag_indices, [0.005, 0, 0], [True,False,False])
     simu.run_simulation(time=100.0)
 
-    ft.trajectory_to_xyz(filename_in="simulation"+str(i)+".traj", filename_out="simulation"+str(i)+".xyz")
+
+for j in range(len(force_list)):
+    ft.trajectory_to_xyz(filename_in="simulation"+str(j)+".traj", filename_out="simulation"+str(j)+".xyz")
 
 
