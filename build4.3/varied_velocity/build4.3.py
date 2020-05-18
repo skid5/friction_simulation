@@ -4,8 +4,9 @@ import friction_tools as ft
 import constants
 
 simu = ft.FrictionSimulation()
-velo_list = [-0.05, -0.01, -0.005, -0.001]
-force = 0.1
+velo_list = [0.01, 0.005, 0.001, 0.0005]
+force = -0.5
+
 for i in range(len(velo_list)):
     simu.continue_from_trajectory(filename = "beginning.traj")
     velo = velo_list[i]
@@ -33,14 +34,13 @@ for i in range(len(velo_list)):
  
     #happenings
     simu.fix_positions(bottom_slab, [True,True,True])
-    simu.add_constant_force(top_slab, [0, 0, force])
-    simu.run_simulation(time = 100.0)
 
     simu.fix_velocities(top_indices, [velo, 0, 0], [True,False,False])
     simu.run_simulation(time = 100)
 
     simu.fix_velocities(top_indices, [0, 0, 0], [False,False,False])
-    simu.run_simulation(time = 500)
+    simu.add_constant_force(top_slab, [0, 0, force])
+    simu.run_simulation(time = 2500)
 
     ft.trajectory_to_xyz(filename_in="simulation"+str(i)+".traj", filename_out="simulation"+str(i)+".xyz")
 
