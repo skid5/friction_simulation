@@ -6,7 +6,7 @@ simu = ft.FrictionSimulation()
 
 #elements
 simu.create_slab(element='Fe',xy_cells=3,z_cells=2,top_z=0.0)
-simu.create_slab(element='Al',xy_cells=3,z_cells=2,bottom_z=2.0)
+simu.create_slab(element='Al',xy_cells=3,z_cells=2,bottom_z=4.0)
 
 #interactions
 simu.create_interaction(['Fe','Fe'], strength=1.0, equilibrium_distance=2.375)
