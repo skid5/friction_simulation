@@ -4,10 +4,11 @@ import friction_tools as ft
 import constants
 
 simu = ft.FrictionSimulation()
-force_list = [-0.5, -0.1, -0.05, -0.01]
-for i in range(len(force_list)):
+velo_list = [-0.05, -0.01, -0.005, -0.001]
+force = 0.1
+for i in range(len(velo_list)):
     simu.continue_from_trajectory(filename = "beginning.traj")
-    force = force_list[i]
+    velo = velo_list[i]
 
     #interactions
     simu.create_interaction(['Fe', 'Fe'], strength = constants.iron_strength, equilibrium_distance = constants.iron_equilibrium_distance)
@@ -35,7 +36,10 @@ for i in range(len(force_list)):
     simu.add_constant_force(top_slab, [0, 0, force])
     simu.run_simulation(time = 100.0)
 
-    simu.fix_velocities(top_indices, [0.005, 0, 0], [True,False,False])
+    simu.fix_velocities(top_indices, [velo, 0, 0], [True,False,False])
+    simu.run_simulation(time = 100)
+
+    simu.fix_velocities(top_indices, [0, 0, 0], [False,False,False])
     simu.run_simulation(time = 500)
 
     ft.trajectory_to_xyz(filename_in="simulation"+str(i)+".traj", filename_out="simulation"+str(i)+".xyz")
