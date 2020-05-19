@@ -6,7 +6,7 @@ import numpy as np
 
 simu = ft.FrictionSimulation()
 force_list = [-10**(-4),-10**(-8),-10**(-12),-10**(-16)]
-velo = 10**(-5) 
+velo = 10**(-4) 
 
 for i in range(len(force_list)):
     simu.continue_from_trajectory(filename = "beginning.traj")
