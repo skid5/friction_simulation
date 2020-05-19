@@ -6,7 +6,7 @@ import numpy as np
 
 simu = ft.FrictionSimulation()
 velo = 10**(-4) 
-force = -10**(-16)
+force = -10**(-8)
 simu.continue_from_trajectory(filename = "beginning.traj")
 
 #interactions
