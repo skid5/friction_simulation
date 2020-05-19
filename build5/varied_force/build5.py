@@ -34,10 +34,9 @@ for i in range(len(force_list)):
     #happenings
     simu.set_temperature(300)
     simu.fix_positions(bottom_indices, [True,True,True])
-    simu.fix_velocities(top_slab, [0.01, 0, 0], [True,False,False])
+    simu.fix_velocities(top_indices, [0.01, 0, 0], [True,False,False])
     simu.run_simulation(time = 300.0)
 
-    simu.fix_velocities(top_slab, [0.01, 0, 0], [False,False,False])
     simu.add_constant_force(top_slab, [0, 0, force])
     simu.run_simulation(time = 700)
 
