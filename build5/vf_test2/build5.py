@@ -23,7 +23,7 @@ top_indices = simu.get_indices_z_more_than(5.5)
 
 
 #stats and dynamics
-simu.create_dynamics(dt = 5, temperature = 300, coupled_indices = bottom_indices)
+simu.create_dynamics(dt = 6, temperature = 300, coupled_indices = bottom_indices)
 simu.print_stats_during_simulation(interval = 50.0)
 
 simu.save_trajectory_during_simulation(interval= 50.0)
@@ -37,7 +37,7 @@ simu.fix_positions(bottom_indices, [True,True,True])
 simu.fix_velocities(top_indices, [velo, 0, 0], [True,False,False])
 
 simu.add_constant_force(top_slab, [0, 0, force])
-simu.run_simulation(steps= 2000)
+simu.run_simulation(steps= 8000)
 
 ft.trajectory_to_xyz()
 
