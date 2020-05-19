@@ -1,4 +1,7 @@
 from numpy import mean
+import matplotlib
+matplotlib.use("Agg")
+from matplotlib import pyplot as plt
 import sys
 import os
 auto = False
@@ -7,8 +10,10 @@ verbose = False
 n_simulations = 4
 prefix = "avr_force"
 suffix = ".txt"
-avg_x_fn = "average_x.txt"
-avg_y_fn = "average_y.txt"
+averages_fn = "averages.txt"
+output_fn = "plots.png"
+# TODO: Read force/velocity list from file or command line.
+force_list = range(1,11)
 def print_help():
     print("TODO: Kirjoita apu.")
 
@@ -52,30 +57,58 @@ if verbose:
     for fn in file_list:
         print fn,
     print
-    print "Writing output to " + avg_x_fn + " and " + avg_y_fn + "."
+    print "Writing output to " + averages_fn + "."
 
-for fn in file_list:
+
+def gather_data(fn):
     fp = open(fn, "r")
-    x = []
-    y = []
+    result = []
     while True:
         line = fp.readline()
         if line == '':
             break
         line = line.split()
-        x.append(float(line[0]))
-        y.append(float(line[1]))
-
+        floats = [float(f) for f in line]
+        result.append(floats)
     fp.close()
+    return result
 
-    fp_x = open(avg_x_fn, "a")
-    fp_y = open(avg_y_fn, "a")
+def write_data(data, fn, sep = "\t"):
+    fp = open(fn, "w")
+    for datavec in data:
+        for d in datavec:
+            fp.write(str(d) + sep)
+        fp.write("\n")
+    fp.close()
+    
+averages = []
+for fn in file_list:
+    res = gather_data(fn)
+    x, y, z = zip(*res)
+    averages.append( (mean(x), mean(y)) )
 
-    average_x = mean(x)
-    average_y = mean(y)
+write_data(averages, averages_fn)
 
-    fp_x.write(str(average_x) + '\n')
-    fp_y.write(str(average_y) + '\n')
+# Make data ready for plotting.
+avgs_x, avgs_y = zip(*averages)
 
-    fp_x.close()
-    fp_y.close()
+# Plotting!
+# What do we want?
+# We want 2 graphs in one image. (x- and y-components) [pyplot.plot(t, f1(t), t, f2(t), ...)]
+# We want the average friction as a function of velocity or force. [pyplot.plot(force, avg_friction_x, force, ...)]
+# We want to plot the data points as points(crosses). [pyplot.plot(x,y,"rx") # (red crosses)]
+# We might want to fit a curve to data.
+# We want to write the graphs to files. [pyplot.savefig(...) # (supports png and pdf at least.)]
+# https://matplotlib.org/tutorials/introductory/pyplot.html
+
+# These settings can be modified.
+plt.plot(force_list, avgs_x, "bx", label = "x-component")
+plt.plot(force_list, avgs_y, "rx", label = "y-component")
+plt.xlabel("Normal force")
+plt.ylabel("Friction force")
+plt.title("Friction force as a function of normal force")
+#plt.axis([xmin, xmax, ymin, ymax])
+plt.grid(True)
+plt.legend(loc = "upper left")
+plt.savefig(output_fn)
+
