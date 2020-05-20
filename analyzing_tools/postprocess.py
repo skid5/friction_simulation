@@ -49,12 +49,10 @@ verbose = False
 force_file = True
 n_simulations = 10
 prefix = "avr_force"
-suffix = ".txt"
 averages_fn = "averages.txt"
 output_fn = "plots.png"
 force_list_fn = "force_list.txt"
-
-# TODO: Read force/velocity list from file or command line.
+linspace_min = linspace_max = linspace_steps = -1
 force_list = []
 
 for s in sys.argv[1:]:
@@ -69,20 +67,24 @@ for s in sys.argv[1:]:
         prefix = s.split("=")[-1]
         have_prefix = True
     elif s.startswith("-f="):
-		# Usage example: -f=force_list.txt to read from file
-		#				 -f=1,5,10 to create a range from 1 to 5 with 10 steps.
 		s = s.replace("=", " ").replace(","," ").split()
 		if len(s) == 2:
-			# Change default name to a custom name.
+			# Just change default name to a custom name.
 			force_list_fn = s[1]
-		elif len(s) == 4:
+		elif len(s) == 3:
 			# Tell the program that we will not read force data from a file.
 			force_file = False
-			# Instead create a linspace from the parameters.
-			force_list = linspace(float(s[1]), float(s[2]), int(s[3])).tolist()
-			n_simulations = int(s[3])
-			if verbose:
-				print "Linspace is using parameters low = " + s[1] + ", high = " + s[2] + ", steps = " + s[3]
+			# Set parameters for linspace, but don't create linspace yet.
+			linspace_min = float(s[1])
+			linspace_max = float(s[2])
+			
+		elif len(s) == 4:
+			# TODO: Maybe do error checks here for negative values.
+			# Same as the previous branch, but also sets linspace steps.
+			force_file = False
+			linspace_min = float(s[1])
+			linspace_max = float(s[2])
+			linspace_steps = n_simulations = int(s[3])
     else:
         print_help()
         sys.exit()
@@ -108,9 +110,18 @@ file_list = []
 if auto:
     ls = os.listdir(".")
     file_list = [fn for fn in ls if fn.startswith(prefix)]
+	
+	# If linspace steps wasn't given as a parameter, it is the same as the number of files.
+    if linspace_steps == -1:
+        linspace_steps = len(file_list)
+	
+	force_list = linspace(linspace_min, linspace_max, linspace_steps).tolist()
+	if verbose:
+		print "Linspace is using parameters low = " + str(linspace_min) + ", high = " + str(linspace_max) + ", steps = " + str(linspace_steps)
+		
 else:
     for i in range(n_simulations):
-        file_list.append(prefix + str(i) + suffix)
+        file_list.append(prefix + str(i) + ".txt")
 
 
 if verbose:
