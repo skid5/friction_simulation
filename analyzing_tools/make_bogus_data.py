@@ -1,6 +1,6 @@
 import random
 sep = "\t"
-n_files = 10
+n_files = 20
 n_datapoints = 10
 len_datavec = 3
 for i in range(n_files):
