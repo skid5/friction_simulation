@@ -2,7 +2,7 @@ import matplotlib
 matplotlib.use("Agg")
 from matplotlib import pyplot as plt
 from scipy import optimize
-from numpy import mean
+from numpy import mean, linspace
 import sys
 import os
 
@@ -12,10 +12,14 @@ def print_help():
     # TODO: Kirjoita apu.
     print "Usage: python " + sys.argv[0] + " [-a] [-v] [-n=number_of_simulations] [-p=file_prefix]" 
     print "-a\t--auto\t\t\tuse automatic mode. Deduce file names and amount of files."
-    print "-p\t--prefix=\t\tuse a custom file prefix. Default is avr_force."
-    print "-n\t--nsimulations=\t\tuse a custom number of simulations. Default is 4. Is omitted if automatic mode is used."
+    print "-p=\t--prefix=\t\tuse a custom file prefix. Default is avr_force."
+    print "-n=\t--nsimulations=\t\tuse a custom number of simulations. Default is 4. Is omitted if automatic mode is used."
+    print "\t\t\t\t Using the linspace option will also override this option."
     print "-v\t--verbose\t\tprint lots of information."
+    print "-f=\t\t\t\tset a custom filename for the force list file or create the force list using linspace."
+    print "\t\t\t\tUsage -f=filename.txt of -f=low,high,steps. Default action: read data from force_list.txt"
 
+# TODO: Error checking.
 def gather_data(fn):
     fp = open(fn, "r")
     result = []
@@ -42,7 +46,8 @@ def write_data(data, fn, sep = "\t"):
 auto = False
 have_prefix = False
 verbose = False
-n_simulations = 4
+force_file = True
+n_simulations = 10
 prefix = "avr_force"
 suffix = ".txt"
 averages_fn = "averages.txt"
@@ -50,7 +55,7 @@ output_fn = "plots.png"
 force_list_fn = "force_list.txt"
 
 # TODO: Read force/velocity list from file or command line.
-force_list = range(5)
+force_list = []
 
 for s in sys.argv[1:]:
     # Choose files automatically. Must have prefix, ignore n_simulations.
@@ -63,9 +68,28 @@ for s in sys.argv[1:]:
     elif s.startswith("-p=") or s.startswith("--fileprefix="):
         prefix = s.split("=")[-1]
         have_prefix = True
+    elif s.startswith("-f="):
+		# Usage example: -f=force_list.txt to read from file
+		#				 -f=1,5,10 to create a range from 1 to 5 with 10 steps.
+		s = s.replace("=", " ").replace(","," ").split()
+		if len(s) == 2:
+			# Change default name to a custom name.
+			force_list_fn = s[1]
+		elif len(s) == 4:
+			# Tell the program that we will not read force data from a file.
+			force_file = False
+			# Instead create a linspace from the parameters.
+			force_list = linspace(float(s[1]), float(s[2]), int(s[3])).tolist()
+			n_simulations = int(s[3])
+			if verbose:
+				print "Linspace is using parameters low = " + s[1] + ", high = " + s[2] + ", steps = " + s[3]
     else:
         print_help()
         sys.exit()
+
+if force_file:
+    force_list = gather_data(force_list_fn)
+    force_list = [a[0] for a in force_list]
 
 if verbose:
     if have_prefix:
@@ -84,11 +108,10 @@ file_list = []
 if auto:
     ls = os.listdir(".")
     file_list = [fn for fn in ls if fn.startswith(prefix)]
-    # TODO: Poista purkkaratkaisu.
-    force_list = range(len(file_list))
 else:
-    for i in xrange(n_simulations):
+    for i in range(n_simulations):
         file_list.append(prefix + str(i) + suffix)
+
 
 if verbose:
     print "Processing the following files:",
@@ -99,6 +122,13 @@ if verbose:
 
 
 averages = []
+
+# If force list is still empty at this point, print a warning.
+if len(force_list) == 0:
+	print "Warning: Force list is empty!"
+	print "Using a dirty hack."
+	force_list = range(len(file_list))
+
 for fn in file_list:
     res = gather_data(fn)
     x, y, z = zip(*res)
@@ -108,6 +138,12 @@ write_data(averages, averages_fn)
 
 # Make data ready for plotting.
 avgs_x, avgs_y = zip(*averages)
+
+# If the data vectors are of different length at this point, the program must be halted.
+if len(avgs_x) != len(avgs_y) or len(avgs_y) != len(force_list):
+	print "Warning: data vectors are of different length."
+	print "Aborting program."
+	sys.exit()
 
 # Plotting!
 # What do we want?
