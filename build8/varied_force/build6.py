@@ -6,7 +6,7 @@ import time
 
 t0 = time.time()
 
-SIMTIME = 10000
+SIMTIME = 20000
 k = 10**-7
 
 simu = ft.FrictionSimulation()
