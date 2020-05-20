@@ -13,7 +13,7 @@ suffix = ".txt"
 averages_fn = "averages.txt"
 output_fn = "plots.png"
 # TODO: Read force/velocity list from file or command line.
-force_list = range(1,11)
+force_list = range(5)
 def print_help():
     print("TODO: Kirjoita apu.")
 
@@ -43,11 +43,12 @@ if verbose:
     else:
         print "Using manual mode."
 
-
 file_list = []
 if auto:
     ls = os.listdir(".")
     file_list = [fn for fn in ls if fn.startswith(prefix)]
+    # TODO: Poista purkkaratkaisu
+    force_list = range(len(file_list))
 else:
     for i in xrange(n_simulations):
         file_list.append(prefix + str(i) + suffix)
