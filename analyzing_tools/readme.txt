@@ -26,3 +26,6 @@ python postprocess.py -f=1,10,50
 
 Käytä automaattista tilaa ja voimia, jotka ovat jakautuneet tasaisesti välille [1,10]. Ohjelma laskee voimia välille yhtä paljon kuin on tiedostoja.
 python postprocess.py -a -f=1,10
+
+-z asetus poistaa datasta nollat.
+python postprocess.py -z

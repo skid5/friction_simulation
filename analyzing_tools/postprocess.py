@@ -18,6 +18,7 @@ def print_help():
     print "-v\t--verbose\t\tprint lots of information."
     print "-f=\t\t\t\tset a custom filename for the force list file or create the force list using linspace."
     print "\t\t\t\tUsage -f=filename.txt of -f=low,high,steps. Default action: read data from force_list.txt"
+    print "-z\t\t\t\tif set the program will remove zeros from the data. Default action is to not remove zeros."
 
 # TODO: Error checking.
 def gather_data(fn):
@@ -40,13 +41,14 @@ def write_data(data, fn, sep = "\t"):
             fp.write(str(d) + sep)
         fp.write("\n")
     fp.close()
-    
+
 # Global variable declarations.
 
 auto = False
 have_prefix = False
 verbose = False
 force_file = True
+nozeros = False
 n_simulations = 10
 prefix = "avr_force"
 averages_fn = "averages.txt"
@@ -61,6 +63,8 @@ for s in sys.argv[1:]:
         auto = True
     elif s == "-v" or s == "--verbose":
         verbose = True
+    elif s == "-z":
+		nozeros = True
     elif s.startswith("-n=") or s.startswith("--nsimulations="):
         n_simulations = int(s.split("=")[-1])
     elif s.startswith("-p=") or s.startswith("--fileprefix="):
@@ -71,6 +75,7 @@ for s in sys.argv[1:]:
 		if len(s) == 2:
 			# Just change default name to a custom name.
 			force_list_fn = s[1]
+			print 
 		elif len(s) == 3:
 			# Tell the program that we will not read force data from a file.
 			force_file = False
@@ -104,7 +109,10 @@ if verbose:
     else:
         print "Using manual mode."
     print "Reading forces from " + force_list_fn + "."
-
+    if nozeros:
+        print "Zeros will be removed in the data."
+    else:
+        print "Zeros will be left in the data."
 
 file_list = []
 if auto:
@@ -114,10 +122,11 @@ if auto:
 	# If linspace steps wasn't given as a parameter, it is the same as the number of files.
     if linspace_steps == -1:
         linspace_steps = len(file_list)
-	
-	force_list = linspace(linspace_min, linspace_max, linspace_steps).tolist()
-	if verbose:
-		print "Linspace is using parameters low = " + str(linspace_min) + ", high = " + str(linspace_max) + ", steps = " + str(linspace_steps)
+	# If the forces were not read from file only then create them using linspace.
+	if not force_file:
+	    force_list = linspace(linspace_min, linspace_max, linspace_steps).tolist()
+	    if verbose:
+		    print "Linspace is using parameters low = " + str(linspace_min) + ", high = " + str(linspace_max) + ", steps = " + str(linspace_steps)
 		
 else:
     for i in range(n_simulations):
@@ -143,6 +152,10 @@ if len(force_list) == 0:
 for fn in file_list:
     res = gather_data(fn)
     x, y, z = zip(*res)
+	# Remove zeros.
+    if nozeros:
+        x = [i for i in x if i != 0] 
+        y = [i for i in y if i != 0] 
     averages.append( (mean(x), mean(y)) )
 
 write_data(averages, averages_fn)
