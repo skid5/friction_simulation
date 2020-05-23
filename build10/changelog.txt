@@ -1,0 +1,25 @@
+
+Muutokset build8.2 :sta:
+
+Lennard jones potentiaaleille laitettu oikeat tasapainoetäisyydet.
+Tämä on viereisten atomien etäisyys FCC rakenteessa. Meillä on
+hilavakio 3.333Å => tasapainoetäisyys = 3.333/sqrt(2).
+
+Sidosenergiat raudalle ja kuparille laskettu latenttilämpöjen perusteella.
+Sidosenergiaksi raudan ja kuparin välillä laitettu 0.5*näiden keskiarvo.
+
+Lämpövarannon voimakkuudeksi laitettu oletusarvo 0.01. Tämä koska en
+keksinyt miten se toimii. Havaitsin vain että se toimii tehokkaammin
+kun arvot ovat lähellä 1:htä.
+
+Vaihdettu dt=4. Mahdollistaa hitaampien nopeuksien simuloinisen.
+
+Nopeudet vaihdettu:
+varied_force: 2m/s
+varied_velocity: 1 - 10m/s.
+
+varied_velocity ajaa nyt vakio matkan vakio ajan sijasta. Palkkiin
+kohdistuu voima, joka näyttäisi olevan jaksollinen ja sinimuotoinen.
+Jos palkit kulkisivat eri matkan, saattaisi mitatuille voimille
+tulla huomattavia eroja, riippuen siitä missä vaiheessa palkki on
+lopussa. Lisäksi tämä muutos säästää huomattavasti laskenta-aikaa.
