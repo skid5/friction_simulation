@@ -181,9 +181,9 @@ if len(avgs_x) != len(avgs_y) or len(avgs_y) != len(force_list):
 # These settings can be modified.
 plt.plot(force_list, avgs_x, "bx", label = "x-component")
 plt.plot(force_list, avgs_y, "rx", label = "y-component")
-plt.xlabel("Normal force")
-plt.ylabel("Friction force")
-plt.title("Friction force as a function of normal force")
+plt.xlabel("Velocity")
+plt.ylabel("Friction Force")
+plt.title("Friction force as a function of velocity")
 #plt.axis([xmin, xmax, ymin, ymax])
 plt.grid(True)
 plt.legend(loc = "upper left")
