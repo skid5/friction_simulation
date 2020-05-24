@@ -29,3 +29,7 @@ python postprocess.py -a -f=1,10
 
 -z asetus poistaa datasta nollat.
 python postprocess.py -z
+
+-t asetus piirtää kuvaajat kaikille voimille kaikista tiedostoista aikaa vastaan. Aika on
+laskettu tasajaoin SIMTIME ja dt parametrien avulla. Ne on muutettava koodiin käsin tässä versiossa :(
+python postprocess.py -t
